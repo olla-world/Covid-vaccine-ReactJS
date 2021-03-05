@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@100;200;300;400;500;600;700&display=swap');
+
 #map {
     width: 800px;
     height: 500px;
@@ -25,4 +27,38 @@
     float: left;
     margin-right: 8px;
     opacity: 0.7;
+  }
+
+
+  .heading{
+    padding: 10px;
+    font-weight: 300;
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 18px;
+    color: rgb(0, 122, 192);
+  }
+
+  .country-name{
+    padding: 10px;
+    font-weight: 400;
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 14px;
+    color: rgb(1, 88, 138);
+  }
+
+  .vaccined-number{
+    padding: 0px 10px;
+    font-weight: 700;
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 20px;
+    color: rgba(1, 64, 100, 0.5);
+    text-transform: capitalize;
+  }
+
+  .tag{
+    /* padding: 0px 10px; */
+    font-weight: 400;
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 14px;
+    color: rgb(1, 64, 100);
   }

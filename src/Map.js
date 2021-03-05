@@ -2,10 +2,13 @@ import React from "react";
 import L from "leaflet";
 import statesData from './us-states'
 import './map.css'
+import {covid_vaccine_provider_with_country_geo_json} from './covid_vaccine_provider_with_country_geo_json';
+
+const convid_data = covid_vaccine_provider_with_country_geo_json()
 
 const style = {
   width: "100%",
-  height: "600px"
+  height: "100vh"
 };
 
 const mapStyle = (feature) => {
@@ -15,42 +18,40 @@ const mapStyle = (feature) => {
     color: "white",
     dashArray: "3",
     fillOpacity: 0.7,
-    fillColor: getColor(feature.properties.density)
+    fillColor: getColor(feature.properties.covid_vaccine!==undefined? feature.properties.covid_vaccine.total:0 )
   });
 }
 
 const getColor = (d) =>{
-  return d > 1000
+  return d > 10000000
   ? "#800026"
-  : d > 500
+  : d > 5000000
     ? "#BD0026"
-    : d > 200
+    : d > 200000
       ? "#E31A1C"
-      : d > 100
+      : d > 100000
         ? "#FC4E2A"
-        : d > 50
+        : d > 50000
           ? "#FD8D3C"
-          : d > 20 ? "#FEB24C" : d > 10 ? "#FED976" : "#FFEDA0";
+          : d > 2000? "#FEB24C" : d > 100 ? "#FED976" : "#FFEDA0";
 }
 
 class Map extends React.Component {
   componentDidMount() {
     // create map
     this.map = L.map("map", {
-      center: [37.8, -96],
-      zoom: 4,
+      center: [0, 0],
+      zoom: 2,
       layers: [
         L.tileLayer("https://api.mapbox.com/styles/v1/mapbox/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoiZmxvcnZhbmRla2VyY2tob3ZlIiwiYSI6ImNqdGZyMmtrejAxYWw0M3A2OGtwdTMxNWEifQ.5U-KSDZfyKNC_Z74fEWj6g",
         {
-          maxZoom: 18,
-          attribution:
-            'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
+          maxZoom: 4,
           id: "streets-v9"
         })
       ]
     });
 
-    this.geojson = L.geoJson(statesData, {
+    this.geojson = L.geoJson(convid_data, {
       style: mapStyle,
       onEachFeature: this.onEachFeature
     }).addTo(this.map);
@@ -63,16 +64,19 @@ class Map extends React.Component {
       return this._div;
     };
 
+
     this.info.update = function(props) {
+      let vaccined_number = props && props.covid_vaccine?props.covid_vaccine.total:"data not found"
       this._div.innerHTML =
-        "<h4>US Population Density</h4>" +
         (props
-          ? "<b>" +
+          ? "<div class ='heading'>Coronavirus Vaccine Tracker</div>"+ 
+          "<div class='country-name'>"+
             props.name +
-            "</b><br />" +
-            props.density +
-            " people / mi<sup>2</sup>"
-          : "Hover over a state");
+          "</div>"+
+          "<div class='vaccined-number'>"+
+            "<span class='tag'>Total vaccinations: </span>"+vaccined_number+
+          "</div>"
+          : "<div class ='heading'>Hover over a state</div>");
     };
 
     this.info.addTo(this.map);
